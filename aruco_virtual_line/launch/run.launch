@@ -7,4 +7,11 @@
         
     <node name="localisation" pkg="aruco_virtual_line" type="localisation"/>
 
+    <arg name="rvizconfig" default="$(find aruco_virtual_line)/config/config.rviz" />
+ 
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" />   
 </launch>
+
+
+ 
+ 

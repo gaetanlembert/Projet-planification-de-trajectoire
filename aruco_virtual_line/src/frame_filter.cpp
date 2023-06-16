@@ -4,9 +4,7 @@
 #include <aruco_virtual_line/Transforms.h>
 #include "Transformation.h"
 
-ros::Publisher pub_localisation;
 ros::Publisher pub_transform;
-
 
 aruco_msgs::MarkerArray Ts;
 tf::TransformBroadcaster *br;
@@ -25,12 +23,6 @@ void callback(const aruco_msgs::MarkerArray& msg)
     for (int i=0;i<msg.markers.size();i++)
     {
         const aruco_msgs::Marker &m = msg.markers[i];
-        
-        if (m.id == 162)
-        {
-            std::cout<<"ID 162 : indice : "<< m.confidence<<std::endl;
-        }
-        
         // check if it is already known;
         for (uint j=0;j<Ts.markers.size();j++)
         {
@@ -77,9 +69,6 @@ void callback(const aruco_msgs::MarkerArray& msg)
 //         std::cout<<"The camera is not localized"<<std::endl;
     }
     
-    aruco_msgs::Marker Robot;
-    Robot.pose.pose = camera_pose.converToPose();
-    pub_localisation.publish(Robot);    
     
     pub_transform.publish(Ts);
     
@@ -111,7 +100,6 @@ int main(int argc, char** argv){
 
     ros::Subscriber sub = nh.subscribe("/aruco_marker_publisher/markers", 10, callback);    
     
-    pub_localisation = nh.advertise<aruco_msgs::Marker>("/aruco_virtual_line/robot_transform", 1000);
     pub_transform = nh.advertise<aruco_msgs::MarkerArray>("/aruco_virtual_line/transformations", 1000);
     
     //à ajouter publication des marqueurs sur TF
