@@ -11,8 +11,8 @@ pub = rospy.Publisher('/mobile_robot/cmd_vel', Twist, queue_size=30)
 
 def callback(msg):
     rospy.loginfo(msg)
-    twist.linear.x=4*msg.axes[1]
-    twist.angular.z=-2*msg.axes[0]
+    twist.linear.x=0.5*msg.axes[1]
+    twist.angular.z=0.5*msg.axes[3]
         
 def publisher_thread():
     rate = rospy.Rate(5)

@@ -126,8 +126,8 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
-# include
-  ${catkin_INCLUDE_DIRS}
+    include
+    ${catkin_INCLUDE_DIRS}
 )
 
 ## Declare a C++ library
@@ -145,29 +145,29 @@ include_directories(
 ## The recommended prefix ensures that target names across packages don't collide
 # add_executable(${PROJECT_NAME}_node src/aruco_virtual_line_node.cpp)
 
-add_executable(frame_filter src/frame_filter.cpp)
-
-target_link_libraries(  frame_filter
-                        ${catkin_LIBRARIES}
-)
-
-add_executable(way_points src/way_points.cpp)
-
-target_link_libraries(  way_points
-                        ${catkin_LIBRARIES}
-)
-
-add_executable(trajectory src/trajectory.cpp)
-
-target_link_libraries(  trajectory
-                        ${catkin_LIBRARIES}
-)
-
-add_executable(localisation src/localisation.cpp)
-
-target_link_libraries(  localisation
-                        ${catkin_LIBRARIES}
-)
+# add_executable(frame_filter src/frame_filter.cpp)
+# 
+# target_link_libraries(  frame_filter
+#                         ${catkin_LIBRARIES}
+# )
+# 
+# add_executable(way_points src/way_points.cpp)
+# 
+# target_link_libraries(  way_points
+#                         ${catkin_LIBRARIES}
+# )
+# 
+# add_executable(trajectory src/trajectory.cpp)
+# 
+# target_link_libraries(  trajectory
+#                         ${catkin_LIBRARIES}
+# )
+# 
+# add_executable(localisation src/localisation.cpp)
+# 
+# target_link_libraries(  localisation
+#                         ${catkin_LIBRARIES}
+# )
 
 
 ## Rename C++ executable without prefix
