@@ -16,6 +16,44 @@ void callback(const aruco_virtual_line::WayPoints& msg)
     Traj.Y.push_back(0);
     Traj.Y.push_back(2);
     pub_traj.publish(Traj);
+    
+    float s;
+    int j,k;
+    int p=3;
+    float B[10*n][p+1];
+    float M[10*n][n+2]
+    
+    for(s=0, s=1, s=s+1/(10*n)
+    {
+        for(j=0, j=10*n, j++)
+        {
+            if(x>msg.points[j-1].x and x<=msg.points[j].x)
+            {
+                B[j][0]=1
+            }
+            else
+            {
+                B[j][0]=0;
+            }
+        }
+        for(k=1, k=p+1, k++)
+        {
+            for(i=0, i=n, i++)
+            {
+                for(j=0, j=10*n, j++)
+                {
+                    if(x>msg.points[j-1].x and x<=msg.points[j].x)
+                    {
+                        B[j][k]=(x-msg.points[i].x)/(msg.points[i+k].x-msg.points[i].x)*B[j][k-1]+(msg.points[i+k+1].x-x)/[msg.points[i+k+1].x-msg.points[i+1].x)*B[j+1][k-1];
+                    }
+                    else
+                    {
+                        
+                    }
+                }
+            }
+        }for
+    }
 }
 
 
