@@ -1,0 +1,10 @@
+<launch>
+    <node name="frame_filter" pkg="aruco_virtual_line" type="frame_filter"/>
+        
+    <node name="way_points" pkg="aruco_virtual_line" type="way_points"/>
+        
+    <node name="trajectory" pkg="aruco_virtual_line" type="trajectory"/>
+        
+    <node name="localisation" pkg="aruco_virtual_line" type="localisation"/>
+
+</launch>
