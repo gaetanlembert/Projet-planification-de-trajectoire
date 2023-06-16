@@ -27,7 +27,6 @@ void callback(const aruco_virtual_line::Transforms& msg)
     P.points.push_back(p1);
     P.points.push_back(p2);
     P.points.push_back(p3);
-    P.nbs = P.points.size();
     pub_points.publish(P);
 }
 
