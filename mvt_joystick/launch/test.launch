@@ -1,0 +1,10 @@
+<launch>
+
+    <node name="joy_test" pkg="mvt_joystick" type="test_joy.py"/>
+    
+    <node name="joy_node" pkg="joy" type="joy_node">
+    <param name="dev" value="/dev/input/js2" />
+    </node>
+
+
+</launch>

@@ -1,0 +1,13 @@
+<launch>
+
+    <node name="joystick" pkg="mvt_joystick" type="affichage_joy.py">
+    <remap from="/mobile_robot/cmd_vel" to="/cmd_vel" />
+    </node>
+    
+    <node name="joy_node" pkg="joy" type="joy_node">
+    <param name="dev" value="/dev/input/js2" />
+    </node>
+
+   
+    
+</launch>
