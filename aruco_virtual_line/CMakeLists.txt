@@ -61,7 +61,7 @@ find_package(Eigen3 REQUIRED)
 #   Message2.msg
 # )
 
-add_message_files( FILES WayPoints.msg MarkerTransform.msg Transforms.msg Trajectory.msg Error.msg)
+add_message_files( FILES WayPoints.msg Trajectory.msg Error.msg)
 generate_messages( DEPENDENCIES geometry_msgs  )
 
 ## Generate services in the 'srv' folder

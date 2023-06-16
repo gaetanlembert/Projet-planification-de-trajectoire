@@ -75,6 +75,12 @@ public :
         
         // ne pas changer
         // conversion d'une pose (aruco) en Transformation
+        Transformation( const geometry_msgs::PoseWithCovariance & msg)
+        {
+            *this = Transformation(msg.pose);
+        }
+        
+        
         Transformation( const geometry_msgs::Pose& msg)
         {
             double a = msg.orientation.w;
@@ -113,6 +119,7 @@ public :
             tf::Matrix3x3 Mq;
             for (int i=0;i<3;i++)   for (int j=0;j<3;j++)
                 Mq[i][j] = rotation(i,j);
+            
             return tf::Transform(  Mq, tf::Vector3(position(0),position(1),position(2)));  
         }
         
