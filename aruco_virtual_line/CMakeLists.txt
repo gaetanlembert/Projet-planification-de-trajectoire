@@ -12,13 +12,15 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   std_msgs
   sensor_msgs
+  visualization_msgs
   aruco_ros
   tf
   message_generation
   geometry_msgs
 )
 
-
+## System dependencies are found with CMake's conventions
+find_package(Eigen3 REQUIRED)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -60,7 +62,7 @@ find_package(catkin REQUIRED COMPONENTS
 #   Message2.msg
 # )
 
-add_message_files( FILES WayPoints.msg MarkerTransform.msg Transforms.msg Trajectory.msg Error.msg)
+add_message_files( FILES WayPoints.msg Trajectory.msg Error.msg)
 generate_messages( DEPENDENCIES geometry_msgs  )
 
 ## Generate services in the 'srv' folder
@@ -128,12 +130,16 @@ catkin_package(
 include_directories(
     include
     ${catkin_INCLUDE_DIRS}
+    ${EIGEN3_INCLUDE_DIR}
 )
 
 ## Declare a C++ library
-# add_library(${PROJECT_NAME}
-#   src/${PROJECT_NAME}/aruco_virtual_line.cpp
-# )
+
+file( GLOB_RECURSE SOURCES lib/*.cpp )
+
+add_library(${PROJECT_NAME}
+            ${SOURCES}
+)
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
@@ -145,29 +151,33 @@ include_directories(
 ## The recommended prefix ensures that target names across packages don't collide
 # add_executable(${PROJECT_NAME}_node src/aruco_virtual_line_node.cpp)
 
-# add_executable(frame_filter src/frame_filter.cpp)
-# 
-# target_link_libraries(  frame_filter
-#                         ${catkin_LIBRARIES}
-# )
-# 
-# add_executable(way_points src/way_points.cpp)
-# 
-# target_link_libraries(  way_points
-#                         ${catkin_LIBRARIES}
-# )
-# 
-# add_executable(trajectory src/trajectory.cpp)
-# 
-# target_link_libraries(  trajectory
-#                         ${catkin_LIBRARIES}
-# )
-# 
-# add_executable(localisation src/localisation.cpp)
-# 
-# target_link_libraries(  localisation
-#                         ${catkin_LIBRARIES}
-# )
+add_executable(frame_filter src/frame_filter.cpp)
+
+target_link_libraries(  frame_filter
+                        ${catkin_LIBRARIES}
+                        ${PROJECT_NAME}
+)
+
+add_executable(way_points src/way_points.cpp)
+
+target_link_libraries(  way_points
+                        ${catkin_LIBRARIES}
+                        ${PROJECT_NAME}
+)
+
+add_executable(trajectory src/trajectory.cpp)
+
+target_link_libraries(  trajectory
+                        ${catkin_LIBRARIES}
+                        ${PROJECT_NAME}
+)
+
+add_executable(localisation src/localisation.cpp)
+
+target_link_libraries(  localisation
+                        ${catkin_LIBRARIES}
+                        ${PROJECT_NAME}
+)
 
 
 ## Rename C++ executable without prefix

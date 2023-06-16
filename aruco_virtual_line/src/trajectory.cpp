@@ -1,13 +1,13 @@
 #include <ros/ros.h>
 #include <aruco_msgs/MarkerArray.h>
 #include <geometry_msgs/Transform.h>
-#include <aruco_virtual_line/WayPoints.h>
+#include <visualization_msgs/MarkerArray.h>
 #include <aruco_virtual_line/Trajectory.h>
 
 ros::Publisher pub_traj;
 
 // fonction appeler des qu'on recoit un message de aruco
-void callback(const aruco_virtual_line::WayPoints& msg)
+void callback(const visualization_msgs::MarkerArray& msg)
 {
     aruco_virtual_line::Trajectory Traj;
     Traj.nbs = 2;

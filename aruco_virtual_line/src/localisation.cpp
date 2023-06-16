@@ -18,10 +18,11 @@ void callback_traj(const aruco_virtual_line::Trajectory& msg)
     pub_error.publish(E);
 }
 
-void callback_robot(const geometry_msgs::Transform& msg)
-{
-
-}
+// change get the position of therobot throuht TF
+// void callback_robot(const geometry_msgs::Transform& msg)
+// {
+// 
+// }
 
 
 int main(int argc, char** argv){
@@ -32,7 +33,6 @@ int main(int argc, char** argv){
     ros::NodeHandle nh;
 
     ros::Subscriber sub_traj = nh.subscribe("/aruco_virtual_line/trajectory", 10, callback_traj);
-    ros::Subscriber sub_robot = nh.subscribe("/aruco_virtual_line/robot_transform", 10, callback_robot);
     
     pub_error = nh.advertise<aruco_virtual_line::Error>("/aruco_virtual_line/error", 1000);
     
