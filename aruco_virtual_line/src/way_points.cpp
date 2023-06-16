@@ -10,6 +10,24 @@ ros::Publisher pub_points;
 void callback(const aruco_virtual_line::Transforms& msg)
 {
     aruco_virtual_line::WayPoints P;
+    
+    geometry_msgs::Vector3 p1,p2,p3;
+    p1.x = 0;
+    p1.y = 0;
+    p1.z = 0;
+
+    p2.x = 0;
+    p2.y = 1;
+    p2.z = 0;
+
+    p3.x = 1;
+    p3.y = 1;
+    p3.z = 0;
+    
+    P.points.push_back(p1);
+    P.points.push_back(p2);
+    P.points.push_back(p3);
+    P.nbs = P.points.size();
     pub_points.publish(P);
 }
 
