@@ -11,50 +11,107 @@ ros::Publisher pub_traj, pub_path;
 void callback(const visualization_msgs::MarkerArray& msg)
 {
     aruco_virtual_line::Trajectory Traj;
-    Traj.nbs = 2;
-    Traj.X.push_back(0);
-    Traj.X.push_back(1);
-    Traj.Y.push_back(0);
-    Traj.Y.push_back(2);
+    Traj.nbs = msg.markers.size();
+    
+//    Traj.X.push_back(0);
+//    Traj.X.push_back(1);
+//    Traj.Y.push_back(0);
+//    Traj.Y.push_back(2);
+    
+    float xi[Traj.nbs];
+    float yi[Traj.nbs];
+    
+    float xs[100*Traj.nbs];
+    float ys[100*Traj.nbs];
+    
+    int s;
+    int p=3;
+    
+    float B[Traj.nbs][p+1][100*Traj.nbs];
+    
+    float M[100*Traj.nbs][Traj.nbs];
+    float N[Traj.nbs][Traj.nbs];
+    float NI[Traj.nbs][Traj.nbs];
+    
+    float detM;
+    
+    float Pi[Traj.nbs]
+    
+    //constructions des vecteurs x(i) et y(i)
+    for(int i=0; i<Traj.nbs; i++)
+    {
+        xi[i]=msg.markers[i].pose.pose.x;
+        yi[i]=msg.markers[i].pose.pose.x;
+    }
+    
+    //construction du vecteur x(s) et coeff d'ordre 0
+    for(int i=0; i<Traj.nbs; i++)
+    {
+        for(int j=0; j<100; j++)
+        {
+            s=i+j;
+            
+            xs[s]=xi[i-1]+(xi[i]-xi[i-1])*j/100;
+            
+            if(xs[s]<xi[i] && xs[s]>=xi[i-1])
+            {
+                B[i][0][s]=1;
+            }
+            else
+            {
+                B[i][0][s]=0;
+            }
+        }
+    }
+    
+    //calcul des coeff d'ordre 1 à p
+    for(int q=1; q<p+1; q++)
+    {
+        for(int i=0; i<Traj.nbs; i++)
+        {
+            for(int j=0; j<100; j++)
+            {
+                s=i+j;
+                
+                B[i][q][s]=(xs[s]-xi[i])/(xi[i-q]-xi[i])*B[i][q-1][s]+(xi[i+q+1]-xs[s])/(xi[i+q+1]-x[i+1])*B[i+1][q-1][s];
+            }
+        }
+    }
+    
+    //construction des matrices M et N
+    for(int i=0; i<Traj.nbs; i++)
+    {
+        for(int j=0; j<100; j++)
+        {
+            s=i+j;
+                
+            M[s][i]=B[i][p][s];
+                
+            if(j==0)
+            {
+                for(int q=0; q<=p+1; q++)
+                {
+                    N[i][i-q]=B[i-q][p][s];
+                }
+            }
+        }
+    }
+    
+    NI=inv(N);
+    
+    Pi=yi*NI;
+    
+    ys=Pi*M;
+    
+    for(int s=0; s<100*Traj.nbs; s++)
+    {
+        Traj.X[s]=xs[s];
+        Traj.X[s̉]ys[s];
+    }
+    
     pub_traj.publish(Traj);
     
-//     float s;
-//     int j,k;
-//     int p=3;
-//     float B[10*n][p+1];
-//     float M[10*n][n+2]
-//     
-//     for(s=0, s=1, s=s+1/(10*n)
-//     {
-//         for(j=0, j=10*n, j++)
-//         {
-//             if(x>msg.points[j-1].x and x<=msg.points[j].x)
-//             {
-//                 B[j][0]=1
-//             }
-//             else
-//             {
-//                 B[j][0]=0;
-//             }
-//         }
-//         for(k=1, k=p+1, k++)
-//         {
-//             for(i=0, i=n, i++)
-//             {
-//                 for(j=0, j=10*n, j++)
-//                 {
-//                     if(x>msg.points[j-1].x and x<=msg.points[j].x)
-//                     {
-//                         B[j][k]=(x-msg.points[i].x)/(msg.points[i+k].x-msg.points[i].x)*B[j][k-1]+(msg.points[i+k+1].x-x)/[msg.points[i+k+1].x-msg.points[i+1].x)*B[j+1][k-1];
-//                     }
-//                     else
-//                     {
-//                         
-//                     }
-//                 }
-//             }
-//         }for
-//     }
+    
     
     // creation du message
     nav_msgs::Path p;
