@@ -4,6 +4,7 @@
 #include <visualization_msgs/MarkerArray.h>
 #include <aruco_virtual_line/Trajectory.h>
 #include <nav_msgs/Path.h>
+#include <Eigen/Dense>
 
 ros::Publisher pub_traj, pub_path;
 
@@ -18,50 +19,30 @@ void callback(const visualization_msgs::MarkerArray& msg)
 //    Traj.Y.push_back(0);
 //    Traj.Y.push_back(2);
     
-    float xi[Traj.nbs];
-    float yi[Traj.nbs];
+    Eigen::VectorXd xi(Traj.nbs);
+    Eigen::VectorXd yi(Traj.nbs);
     
-    float xs[100*Traj.nbs];
-    float ys[100*Traj.nbs];
-    
-    int s;
     int p=3;
     
-    float B[Traj.nbs][p+1][100*Traj.nbs];
+    float B[Traj.nbs][p+1][Traj.nbs];
     
-    float M[100*Traj.nbs][Traj.nbs];
-    float N[Traj.nbs][Traj.nbs];
-    float NI[Traj.nbs][Traj.nbs];
+    Eigen::MatrixXd M(Traj.nbs,Traj.nbs);
     
-    float detM;
     
-    float Pi[Traj.nbs]
+    Eigen::VectorXd P(Traj.nbs);
+    
     
     //constructions des vecteurs x(i) et y(i)
     for(int i=0; i<Traj.nbs; i++)
     {
-        xi[i]=msg.markers[i].pose.pose.x;
-        yi[i]=msg.markers[i].pose.pose.x;
+        xi(i)=msg.markers[i].pose.pose.x;
+        yi(i)=msg.markers[i].pose.pose.x;
     }
     
     //construction du vecteur x(s) et coeff d'ordre 0
     for(int i=0; i<Traj.nbs; i++)
     {
-        for(int j=0; j<100; j++)
-        {
-            s=i+j;
-            
-            xs[s]=xi[i-1]+(xi[i]-xi[i-1])*j/100;
-            
-            if(xs[s]<xi[i] && xs[s]>=xi[i-1])
-            {
-                B[i][0][s]=1;
-            }
-            else
-            {
-                B[i][0][s]=0;
-            }
-        }
+        B[i][0][s]=1;
     }
     
     //calcul des coeff d'ordre 1 à p
@@ -69,45 +50,23 @@ void callback(const visualization_msgs::MarkerArray& msg)
     {
         for(int i=0; i<Traj.nbs; i++)
         {
-            for(int j=0; j<100; j++)
-            {
-                s=i+j;
-                
-                B[i][q][s]=(xs[s]-xi[i])/(xi[i-q]-xi[i])*B[i][q-1][s]+(xi[i+q+1]-xs[s])/(xi[i+q+1]-x[i+1])*B[i+1][q-1][s];
-            }
+            B[i][q]=(xi(i)-xi(i))/(xi(i-q(-xi(i))*B[i][q-1]+(xi(i+q+1)-xi(i))/(xi(i+q+1)-x(i+1))*B[i+1][q-1];
         }
     }
     
     //construction des matrices M et N
     for(int i=0; i<Traj.nbs; i++)
     {
-        for(int j=0; j<100; j++)
-        {
-            s=i+j;
-                
-            M[s][i]=B[i][p][s];
-                
-            if(j==0)
-            {
-                for(int q=0; q<=p+1; q++)
-                {
-                    N[i][i-q]=B[i-q][p][s];
-                }
-            }
-        }
+        M(i,i)=B[i][p];
+        M(i,i-1)=B[i-1][p];
+        M(i,i-2)=B[i-2][p];
+        M(i,i-3)=B[i-3][p];
     }
     
-    NI=inv(N);
+    Eigen::MatrixXd MI=M.inverse();
     
-    Pi=yi*NI;
+    P=yi*MI;
     
-    ys=Pi*M;
-    
-    for(int s=0; s<100*Traj.nbs; s++)
-    {
-        Traj.X[s]=xs[s];
-        Traj.X[s̉]ys[s];
-    }
     
     pub_traj.publish(Traj);
     
